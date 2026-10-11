@@ -1,3 +1,23 @@
+# Ігнорування кешу Unity всередині папки lab3
+lab3/[Ll]ibrary/
+lab3/[Tt]emp/
+lab3/[Oo]bj/
+lab3/[Bb]uild/
+lab3/[Bb]uilds/
+lab3/[Ll]ogs/
+lab3/[Uu]ser[Ss]ettings/
+lab3/[Mm]emoryCaptures/
+lab3/.vs/
+lab3/*.csproj
+lab3/*.sln
+
+# Загальні рекурсивні правила
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/.vs/
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
@@ -107,3 +127,20 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+
+# Файли Visual Studio / Rider
+**/.vs/
+**/*.csproj
+**/*.unityproj
+**/*.sln
+**/*.suo
+**/*.user
+**/*.userprefs
+**/*.pidb
+**/*.booproj
+**/.idea/
+
+# Кеш ОС
+.DS_Store
+Thumbs.db
