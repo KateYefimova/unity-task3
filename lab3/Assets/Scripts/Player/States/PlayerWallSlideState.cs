@@ -5,6 +5,16 @@ public class PlayerWallSlideState : PlayerState
     public PlayerWallSlideState(PlayerController player, PlayerStateMachine stateMachine)
         : base(player, stateMachine) { }
 
+    public override void HandleInput()
+    {
+        base.HandleInput();
+
+        if (player.JumpBufferCounter > 0f)
+        {
+            stateMachine.ChangeState(player.WallJumpState);
+        }
+    }
+
     public override void LogicUpdate()
     {
         base.LogicUpdate();
