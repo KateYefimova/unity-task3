@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3538849872318837181}
   m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -190,6 +190,11 @@ MonoBehaviour:
   coyoteTime: 0.12
   jumpBufferTime: 0.12
   wallSlideSpeed: 2.2
+  wallJumpForce: {x: 11, y: 13}
+  wallJumpControlLockTime: 0.15
+  dashSpeed: 22
+  dashDuration: 0.18
+  dashCooldown: 0.8
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
