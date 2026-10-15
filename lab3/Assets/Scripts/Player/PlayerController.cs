@@ -5,25 +5,32 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement (N++ Momentum)")]
     [SerializeField] private float maxSpeed = 13f;
-    [SerializeField] private float groundAcceleration = 65f;
-    [SerializeField] private float groundDeceleration = 50f;
-    [SerializeField] private float airAcceleration = 35f;
+    [SerializeField] private float groundAcceleration = 45f;
+    [SerializeField] private float groundDeceleration = 35f;
+    [SerializeField] private float airAcceleration = 25f;
     [SerializeField] private float airDeceleration = 20f;
 
     [Header("Jump Arc & Game Feel")]
-    [SerializeField] private float jumpForce = 15.5f;
-    [SerializeField] private float fallMultiplier = 2.8f;
-    [SerializeField] private float lowJumpMultiplier = 2.2f;
+    [SerializeField] private float jumpForce = 12f;
+    [SerializeField] private float fallMultiplier = 3.2f;
+    [SerializeField] private float lowJumpMultiplier = 2.4f;
     [SerializeField] private float coyoteTime = 0.12f;
     [SerializeField] private float jumpBufferTime = 0.12f;
 
-    [Header("Wall Slide")]
+    [Header("Wall Slide & Wall Jump")]
     [SerializeField] private float wallSlideSpeed = 2.2f;
+    [SerializeField] private Vector2 wallJumpForce = new Vector2(11f, 13f);
+    [SerializeField] private float wallJumpControlLockTime = 0.15f;
 
-    [Header("Raycast Detection (Environment)")]
+    [Header("Dash")]
+    [SerializeField] private float dashSpeed = 22f;
+    [SerializeField] private float dashDuration = 0.18f;
+    [SerializeField] private float dashCooldown = 0.8f;
+
+    [Header("Raycast Detection")]
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float groundRayLength = 0.15f;
-    [SerializeField] private float wallRayLength = 0.15f;
+    [SerializeField] private float groundRayLength = 0.35f;
+    [SerializeField] private float wallRayLength = 0.25f;
 
     public Rigidbody2D Rb { get; private set; }
     public Collider2D Col { get; private set; }
@@ -32,27 +39,40 @@ public class PlayerController : MonoBehaviour
     public PlayerGroundedState GroundedState { get; private set; }
     public PlayerAirState AirState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
+    public PlayerWallJumpState WallJumpState { get; private set; }
+    public PlayerDashState DashState { get; private set; }
 
     public float InputX { get; private set; }
+    public float FacingDirection { get; private set; } = 1f;
+    public int LastWallDirection { get; private set; } = 0;
     public float CoyoteTimeCounter { get; private set; }
     public float JumpBufferCounter { get; private set; }
+    public float InitialGravityScale { get; private set; }
+    private float dashCooldownTimer;
+    private float currentVelocityX;
 
     public float GroundAcceleration => groundAcceleration;
     public float GroundDeceleration => groundDeceleration;
     public float AirAcceleration => airAcceleration;
     public float AirDeceleration => airDeceleration;
     public float WallSlideSpeed => wallSlideSpeed;
-    private float currentVelocityX;
+    public Vector2 WallJumpForce => wallJumpForce;
+    public float WallJumpControlLockTime => wallJumpControlLockTime;
+    public float DashSpeed => dashSpeed;
+    public float DashDuration => dashDuration;
 
     private void Awake()
     {
         Rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
+        InitialGravityScale = Rb.gravityScale;
 
         StateMachine = new PlayerStateMachine();
         GroundedState = new PlayerGroundedState(this, StateMachine);
         AirState = new PlayerAirState(this, StateMachine);
         WallSlideState = new PlayerWallSlideState(this, StateMachine);
+        WallJumpState = new PlayerWallJumpState(this, StateMachine);
+        DashState = new PlayerDashState(this, StateMachine);
     }
 
     private void Start()
@@ -77,10 +97,16 @@ public class PlayerController : MonoBehaviour
     private void GatherInput()
     {
         InputX = Input.GetAxisRaw("Horizontal");
+        if (InputX != 0) FacingDirection = Mathf.Sign(InputX);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
         {
             JumpBufferCounter = jumpBufferTime;
+        }
+
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && dashCooldownTimer <= 0f)
+        {
+            StateMachine.ChangeState(DashState);
         }
     }
 
@@ -88,9 +114,11 @@ public class PlayerController : MonoBehaviour
     {
         CoyoteTimeCounter -= Time.deltaTime;
         JumpBufferCounter -= Time.deltaTime;
+        dashCooldownTimer -= Time.deltaTime;
     }
 
     public void ResetCoyoteTimer() => CoyoteTimeCounter = coyoteTime;
+    public void ResetDashCooldown() => dashCooldownTimer = dashCooldown;
 
     public void ExecuteJump()
     {
@@ -102,10 +130,8 @@ public class PlayerController : MonoBehaviour
     public void ApplyHorizontalMovement(float accel, float decel)
     {
         float targetSpeed = InputX * maxSpeed;
-
-        float smoothTime = IsGrounded() ? 0.08f : 0.15f; 
+        float smoothTime = IsGrounded() ? 0.08f : 0.15f;
         float newX = Mathf.SmoothDamp(Rb.linearVelocity.x, targetSpeed, ref currentVelocityX, smoothTime);
-
         Rb.linearVelocity = new Vector2(newX, Rb.linearVelocity.y);
     }
 
@@ -115,12 +141,11 @@ public class PlayerController : MonoBehaviour
         {
             Rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
         }
-        else if (Rb.linearVelocity.y > 0 && !Input.GetKey(KeyCode.Space))
+        else if (Rb.linearVelocity.y > 0 && !Input.GetKey(KeyCode.Space) && !Input.GetButton("Jump"))
         {
             Rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
         }
     }
-
 
     public bool IsGrounded()
     {
@@ -145,11 +170,13 @@ public class PlayerController : MonoBehaviour
         if (hitRight.collider != null)
         {
             wallDirection = 1;
+            LastWallDirection = 1;
             return true;
         }
         if (hitLeft.collider != null)
         {
             wallDirection = -1;
+            LastWallDirection = -1;
             return true;
         }
 
