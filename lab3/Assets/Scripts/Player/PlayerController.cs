@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundRayLength = 0.35f;
     [SerializeField] private float wallRayLength = 0.25f;
+    [Header("Fall Death Boundary")]
+    [SerializeField] private float fallBoundaryY = -15f;
 
     public Rigidbody2D Rb { get; private set; }
     public Collider2D Col { get; private set; }
@@ -82,6 +84,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (transform.position.y < fallBoundaryY)
+        {
+            GameObject sp = GameObject.Find("SpawnPoint");
+            Vector2 targetPos = sp != null ? (Vector2)sp.transform.position : Vector2.zero;
+            Respawn(targetPos);
+            return;
+        }
+        
         GatherInput();
         UpdateTimers();
 
@@ -197,5 +207,25 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(b.center, b.center + Vector3.right * (b.extents.x + wallRayLength));
         Gizmos.DrawLine(b.center, b.center + Vector3.left * (b.extents.x + wallRayLength));
+    }
+    
+    public void ConsumeJumpBuffer()
+    {
+        JumpBufferCounter = 0f;
+    }
+
+    public void ResetHorizontalSmoothing()
+    {
+        currentVelocityX = 0f;
+    }
+
+    public void Respawn(Vector2 spawnPosition)
+    {
+        transform.position = spawnPosition;
+        Rb.linearVelocity = Vector2.zero;
+        currentVelocityX = 0f;
+        JumpBufferCounter = 0f;
+        CoyoteTimeCounter = 0f;
+        StateMachine.ChangeState(AirState);
     }
 }
