@@ -20,6 +20,18 @@ public class PlayerDashState : PlayerState
         player.Rb.linearVelocity = new Vector2(dashDirection * player.DashSpeed, 0f);
     }
 
+    public override void HandleInput()
+    {
+        base.HandleInput();
+
+        if (player.IsGrounded() && player.JumpBufferCounter > 0f)
+        {
+            player.ConsumeJumpBuffer();
+            player.ExecuteJump();
+            stateMachine.ChangeState(player.AirState);
+        }
+    }
+
     public override void LogicUpdate()
     {
         base.LogicUpdate();
@@ -38,5 +50,6 @@ public class PlayerDashState : PlayerState
     {
         base.Exit();
         player.Rb.gravityScale = player.InitialGravityScale;
+        player.ResetHorizontalSmoothing();
     }
 }

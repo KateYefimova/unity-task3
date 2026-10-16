@@ -10,6 +10,7 @@ public class PlayerWallJumpState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        player.ConsumeJumpBuffer();
         controlLockTimer = player.WallJumpControlLockTime;
 
         int jumpDirection = -player.LastWallDirection;
@@ -20,7 +21,7 @@ public class PlayerWallJumpState : PlayerState
     {
         base.LogicUpdate();
         controlLockTimer -= Time.deltaTime;
-
+        
         if (controlLockTimer <= 0f)
         {
             stateMachine.ChangeState(player.AirState);
