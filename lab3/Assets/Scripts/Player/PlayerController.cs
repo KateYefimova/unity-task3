@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
     {
         if (animator == null) return;
 
-        // Викликаємо параметри з малої літери згідно із зафіксованим списком
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         animator.SetFloat("velocityX", Mathf.Abs(Rb.linearVelocity.x));
         animator.SetFloat("velocityY", Rb.linearVelocity.y);
         animator.SetBool("isGrounded", IsGrounded());
@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
     public void ApplyHorizontalMovement(float accel, float decel)
     {
         float targetSpeed = InputX * maxSpeed;
-        float smoothTime = IsGrounded() ? 0.15f : 0.22f; // Налаштовано підвищену плавність ходу й ковзання
+        float smoothTime = IsGrounded() ? 0.15f : 0.22f; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         float newX = Mathf.SmoothDamp(Rb.linearVelocity.x, targetSpeed, ref currentVelocityX, smoothTime);
         Rb.linearVelocity = new Vector2(newX, Rb.linearVelocity.y);
     }
@@ -260,13 +260,34 @@ public class PlayerController : MonoBehaviour
         currentVelocityX = 0f;
     }
 
-    public void Respawn(Vector2 spawnPosition)
+  public void Respawn(Vector2 spawnPosition)
     {
+        StartCoroutine(DeathAndRespawnRoutine(spawnPosition));
+    }
+
+    private System.Collections.IEnumerator DeathAndRespawnRoutine(Vector2 spawnPosition)
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Death");
+        }
+
+        Rb.linearVelocity = Vector2.zero;
+        currentVelocityX = 0f;
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        yield return new WaitForSeconds(0.4f);
+
+        transform.localScale = Vector3.one;
+
         transform.position = spawnPosition;
         Rb.linearVelocity = Vector2.zero;
         currentVelocityX = 0f;
         JumpBufferCounter = 0f;
         CoyoteTimeCounter = 0f;
+
+        if (col != null) col.enabled = true;
         StateMachine.ChangeState(AirState);
     }
 }
