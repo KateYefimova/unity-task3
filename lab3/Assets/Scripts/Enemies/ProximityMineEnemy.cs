@@ -9,7 +9,8 @@ public class ProximityMineEnemy : BaseEnemy
     [SerializeField] private float chargeSpeed = 16f;
     [SerializeField] private float cooldownDuration = 1.2f;
 
-    [Header("Visual Feedback")]
+    [Header("Animation & Visuals")]
+    [SerializeField] private Animator mineAnimator;
     [SerializeField] private Color idleColor = Color.white;
     [SerializeField] private Color warningColor = Color.red;
 
@@ -22,6 +23,7 @@ public class ProximityMineEnemy : BaseEnemy
     {
         base.Awake();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        if (mineAnimator == null) mineAnimator = GetComponent<Animator>();
         if (spriteRenderer != null) spriteRenderer.color = idleColor;
 
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -33,6 +35,8 @@ public class ProximityMineEnemy : BaseEnemy
         switch (currentState)
         {
             case MineState.Idle:
+                UpdateAnimatorState(0); // 0 = Idle
+
                 if (PlayerInRange())
                 {
                     currentState = MineState.Triggered;
@@ -42,6 +46,7 @@ public class ProximityMineEnemy : BaseEnemy
                 break;
 
             case MineState.Triggered:
+                UpdateAnimatorState(1); // 1 = Warning 
                 timer -= Time.deltaTime;
 
                 if (spriteRenderer != null)
@@ -56,9 +61,11 @@ public class ProximityMineEnemy : BaseEnemy
                 break;
 
             case MineState.Charging:
+                UpdateAnimatorState(2); // 2 = Charge
                 break;
 
             case MineState.Cooldown:
+                UpdateAnimatorState(0); // 0 = Повернення в Idle під час перезарядки
                 timer -= Time.deltaTime;
                 if (timer <= 0f)
                 {
@@ -72,6 +79,8 @@ public class ProximityMineEnemy : BaseEnemy
     private void LaunchCharge()
     {
         currentState = MineState.Charging;
+        UpdateAnimatorState(2);
+
         if (playerTransform != null)
         {
             targetDirection = ((Vector2)playerTransform.position - rb.position).normalized;
@@ -104,6 +113,15 @@ public class ProximityMineEnemy : BaseEnemy
         rb.bodyType = RigidbodyType2D.Kinematic;
         currentState = MineState.Cooldown;
         timer = cooldownDuration;
+        UpdateAnimatorState(0);
         if (spriteRenderer != null) spriteRenderer.color = idleColor;
+    }
+
+    private void UpdateAnimatorState(int stateIndex)
+    {
+        if (mineAnimator != null)
+        {
+            mineAnimator.SetInteger("state", stateIndex);
+        }
     }
 }
