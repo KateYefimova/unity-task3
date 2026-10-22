@@ -1181,6 +1181,32 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c755c71edc1804288bf81bee37b2f5d1, type: 3}
+--- !u!1 &1524504774 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7350787330235332229, guid: c35ea5f4ac67e5d4e844a60b21caac18, type: 3}
+  m_PrefabInstance: {fileID: 8800449228018229317}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1524504775 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5829321219264247657, guid: c35ea5f4ac67e5d4e844a60b21caac18, type: 3}
+  m_PrefabInstance: {fileID: 8800449228018229317}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1524504781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524504774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc8b5ecc7d184721a59c1573410088b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationFeedbackHandler
+  animator: {fileID: 1524504775}
+  hurtKey: 106
+  deathKey: 108
+  actionKey: 101
 --- !u!4 &1542381060 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7795542697110021220, guid: 4252315cd24c5704086daaf285a4d587, type: 3}
@@ -1506,6 +1532,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2475214590978535480, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1648910502}
+    - targetCorrespondingSourceObject: {fileID: 2475214590978535480, guid: 09bef158380bfe14088537f1326148e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1648910503}
   m_SourcePrefab: {fileID: 100100000, guid: 09bef158380bfe14088537f1326148e6, type: 3}
 --- !u!1 &1648910501 stripped
 GameObject:
@@ -1534,6 +1563,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1648910503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648910501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc8b5ecc7d184721a59c1573410088b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationFeedbackHandler
+  animator: {fileID: 1648910502}
+  hurtKey: 104
+  deathKey: 107
+  actionKey: 101
 --- !u!1001 &1667608953
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2226,7 +2271,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7350787330235332229, guid: c35ea5f4ac67e5d4e844a60b21caac18, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1524504781}
   m_SourcePrefab: {fileID: 100100000, guid: c35ea5f4ac67e5d4e844a60b21caac18, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
