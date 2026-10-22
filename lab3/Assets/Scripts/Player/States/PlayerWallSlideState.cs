@@ -5,19 +5,15 @@ public class PlayerWallSlideState : PlayerState
     public PlayerWallSlideState(PlayerController player, PlayerStateMachine stateMachine)
         : base(player, stateMachine) { }
 
-    public override void HandleInput()
+    public override void LogicUpdate()
     {
-        base.HandleInput();
+        base.LogicUpdate();
 
         if (player.JumpBufferCounter > 0f)
         {
             stateMachine.ChangeState(player.WallJumpState);
+            return;
         }
-    }
-
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
 
         if (player.IsGrounded())
         {
@@ -25,11 +21,10 @@ public class PlayerWallSlideState : PlayerState
             return;
         }
 
-        if (!player.IsTouchingWall(out int wallDir) ||
-            (wallDir == 1 && player.InputX <= 0) ||
-            (wallDir == -1 && player.InputX >= 0))
+        if (!player.IsTouchingWall(out _))
         {
             stateMachine.ChangeState(player.AirState);
+            return;
         }
     }
 
@@ -37,7 +32,9 @@ public class PlayerWallSlideState : PlayerState
     {
         base.PhysicsUpdate();
 
-        float clampedY = Mathf.Max(player.Rb.linearVelocity.y, -player.WallSlideSpeed);
-        player.Rb.linearVelocity = new Vector2(player.Rb.linearVelocity.x, clampedY);
+        if (player.Rb.linearVelocity.y < -player.WallSlideSpeed)
+        {
+            player.Rb.linearVelocity = new Vector2(player.Rb.linearVelocity.x, -player.WallSlideSpeed);
+        }
     }
 }
