@@ -8,8 +8,23 @@ public class JumpingEnemy : BaseEnemy
     [SerializeField] private float jumpCooldown = 2f;
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("Level 2 / Aggressive Jump Settings")]
+    [Tooltip("Чи дозволено подвійний стрибок у повітрі для 2-го рівня")]
+    [SerializeField] private bool canDoubleJump = false;
+
+    [Tooltip("Затримка перед другим стрибком у повітрі")]
+    [SerializeField] private float doubleJumpDelay = 0.4f;
+
+    [Tooltip("Множник горизонтальної сили, якщо гравець далеко")]
+    [SerializeField] private float aggressiveXMultiplier = 1f;
+
+    [Tooltip("Візуальне стискання перед стрибком")]
+    [SerializeField] private bool enableJumpSquish = false;
+
     private float cooldownTimer;
     private bool isGrounded;
+    private bool hasDoubleJumped;
+    private float airTimer;
 
     protected override void Awake()
     {
@@ -24,9 +39,30 @@ public class JumpingEnemy : BaseEnemy
         cooldownTimer -= Time.deltaTime;
         CheckGrounded();
 
-        if (isGrounded && cooldownTimer <= 0f && PlayerInRange())
+        if (isGrounded)
         {
-            ExecuteJumpToPlayer();
+            hasDoubleJumped = false;
+            airTimer = 0f;
+
+            if (cooldownTimer <= 0f && PlayerInRange())
+            {
+                if (enableJumpSquish)
+                {
+                    StartCoroutine(SquishAndJumpRoutine());
+                }
+                else
+                {
+                    ExecuteJumpToPlayer();
+                }
+            }
+        }
+        else if (canDoubleJump && !hasDoubleJumped && PlayerInRange())
+        {
+            airTimer += Time.deltaTime;
+            if (airTimer >= doubleJumpDelay && rb.linearVelocity.y < 2f)
+            {
+                ExecuteDoubleJump();
+            }
         }
     }
 
@@ -40,8 +76,33 @@ public class JumpingEnemy : BaseEnemy
     private void ExecuteJumpToPlayer()
     {
         if (playerTransform == null) return;
+
         float directionToPlayer = Mathf.Sign(playerTransform.position.x - transform.position.x);
-        rb.linearVelocity = new Vector2(directionToPlayer * jumpForceX, jumpForceY);
+        float finalForceX = jumpForceX * aggressiveXMultiplier;
+
+        rb.linearVelocity = new Vector2(directionToPlayer * finalForceX, jumpForceY);
         cooldownTimer = jumpCooldown;
+    }
+
+    private void ExecuteDoubleJump()
+    {
+        if (playerTransform == null) return;
+
+        hasDoubleJumped = true;
+        float directionToPlayer = Mathf.Sign(playerTransform.position.x - transform.position.x);
+
+        rb.linearVelocity = new Vector2(directionToPlayer * jumpForceX * 1.3f, jumpForceY * 0.75f);
+    }
+
+    private System.Collections.IEnumerator SquishAndJumpRoutine()
+    {
+        cooldownTimer = jumpCooldown;
+        Vector3 origScale = transform.localScale;
+
+        transform.localScale = new Vector3(origScale.x * 1.25f, origScale.y * 0.7f, origScale.z);
+        yield return new WaitForSeconds(0.12f);
+
+        transform.localScale = origScale;
+        ExecuteJumpToPlayer();
     }
 }
