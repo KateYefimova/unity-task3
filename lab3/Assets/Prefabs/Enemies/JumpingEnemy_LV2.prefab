@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7806174551706812493
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1771450901480415109, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: jumpForceX
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771450901480415109, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: jumpCooldown
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771450901480415109, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: canDoubleJump
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771450901480415109, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: enableJumpSquish
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1771450901480415109, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: aggressiveXMultiplier
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3264455895619048891, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169641272425315632, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_Color.b
+      value: 0.08659053
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169641272425315632, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_Color.g
+      value: 0.028435374
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169641272425315632, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6698113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5874504336399536334, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
+      propertyPath: m_Name
+      value: JumpingEnemy_LV2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ed3e7dc372145496f9ae6c7c39ebd6aa, type: 3}
