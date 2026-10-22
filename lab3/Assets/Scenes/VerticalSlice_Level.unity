@@ -1397,7 +1397,7 @@ MonoBehaviour:
   offset: {x: 3, y: 1.5, z: -10}
   useBounds: 1
   minX: 12
-  maxX: 50
+  maxX: 55
   minY: -3
   maxY: 5
 --- !u!114 &1608914011
@@ -1457,6 +1457,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -112567461, guid: 10f3cacccb0c4c547be76836eba20664, type: 3}
     - target: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -2248,6 +2252,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 6582046967323461550, guid: 274d64617113287499ed1c4165d1d8f3, type: 3}
+    - target: {fileID: 6566072240937058303, guid: c35ea5f4ac67e5d4e844a60b21caac18, type: 3}
+      propertyPath: m_Mass
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7350787330235332229, guid: c35ea5f4ac67e5d4e844a60b21caac18, type: 3}
       propertyPath: m_Name
       value: Enemy_ProximityMine
@@ -2256,6 +2264,10 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 1153707006}
+    - target: {fileID: 8753867354081089517, guid: c35ea5f4ac67e5d4e844a60b21caac18, type: 3}
+      propertyPath: chargeSpeed
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

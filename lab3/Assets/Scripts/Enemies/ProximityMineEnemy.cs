@@ -6,7 +6,7 @@ public class ProximityMineEnemy : BaseEnemy
 
     [Header("Proximity Settings")]
     [SerializeField] private float warningDuration = 0.45f;
-    [SerializeField] private float chargeSpeed = 16f;
+    [SerializeField] private float chargeSpeed = 6f;
     [SerializeField] private float cooldownDuration = 1.2f;
 
     [Header("Animation & Visuals")]

@@ -31,8 +31,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundRayLength = 0.35f;
     [SerializeField] private float wallRayLength = 0.25f;
+
     [Header("Fall Death Boundary")]
     [SerializeField] private float fallBoundaryY = -15f;
+
+    [Header("Animation & Visuals")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     public Rigidbody2D Rb { get; private set; }
     public Collider2D Col { get; private set; }
@@ -69,6 +74,9 @@ public class PlayerController : MonoBehaviour
         Col = GetComponent<Collider2D>();
         InitialGravityScale = Rb.gravityScale;
 
+        if (animator == null) animator = GetComponent<Animator>();
+        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+
         StateMachine = new PlayerStateMachine();
         GroundedState = new PlayerGroundedState(this, StateMachine);
         AirState = new PlayerAirState(this, StateMachine);
@@ -91,9 +99,12 @@ public class PlayerController : MonoBehaviour
             Respawn(targetPos);
             return;
         }
-        
+
         GatherInput();
         UpdateTimers();
+
+        HandleSpriteFlip();
+        UpdateAnimations();
 
         StateMachine.CurrentState.HandleInput();
         StateMachine.CurrentState.LogicUpdate();
@@ -127,6 +138,36 @@ public class PlayerController : MonoBehaviour
         dashCooldownTimer -= Time.deltaTime;
     }
 
+    private void HandleSpriteFlip()
+    {
+        if (spriteRenderer == null) return;
+
+        if (InputX > 0.01f)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if (InputX < -0.01f)
+        {
+            spriteRenderer.flipX = true;
+        }
+    }
+
+    private void UpdateAnimations()
+    {
+        if (animator == null) return;
+
+        // Викликаємо параметри з малої літери згідно із зафіксованим списком
+        animator.SetFloat("velocityX", Mathf.Abs(Rb.linearVelocity.x));
+        animator.SetFloat("velocityY", Rb.linearVelocity.y);
+        animator.SetBool("isGrounded", IsGrounded());
+
+        bool isWallSliding = StateMachine.CurrentState == WallSlideState;
+        bool isDashing = StateMachine.CurrentState == DashState;
+
+        animator.SetBool("isWallSliding", isWallSliding);
+        animator.SetBool("isDashing", isDashing);
+    }
+
     public void ResetCoyoteTimer() => CoyoteTimeCounter = coyoteTime;
     public void ResetDashCooldown() => dashCooldownTimer = dashCooldown;
 
@@ -140,7 +181,7 @@ public class PlayerController : MonoBehaviour
     public void ApplyHorizontalMovement(float accel, float decel)
     {
         float targetSpeed = InputX * maxSpeed;
-        float smoothTime = IsGrounded() ? 0.08f : 0.15f;
+        float smoothTime = IsGrounded() ? 0.15f : 0.22f; // Налаштовано підвищену плавність ходу й ковзання
         float newX = Mathf.SmoothDamp(Rb.linearVelocity.x, targetSpeed, ref currentVelocityX, smoothTime);
         Rb.linearVelocity = new Vector2(newX, Rb.linearVelocity.y);
     }
@@ -208,7 +249,7 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawLine(b.center, b.center + Vector3.right * (b.extents.x + wallRayLength));
         Gizmos.DrawLine(b.center, b.center + Vector3.left * (b.extents.x + wallRayLength));
     }
-    
+
     public void ConsumeJumpBuffer()
     {
         JumpBufferCounter = 0f;

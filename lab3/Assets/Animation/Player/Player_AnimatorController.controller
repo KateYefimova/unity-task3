@@ -48,7 +48,7 @@ AnimatorStateMachine:
     m_Position: {x: 593.0602, y: 11.983154, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2789663559025600751}
-    m_Position: {x: 570, y: 200, z: 0}
+    m_Position: {x: 660, y: 290, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2410801549443460440}
     m_Position: {x: 486.203, y: 434.89246, z: 0}
@@ -64,6 +64,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 5174981989739706253}
     m_Position: {x: 120, y: -260, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -3994629883053056249}
+    m_Position: {x: 1370, y: 0, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -4091065895546542231}
@@ -192,10 +195,13 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 4
-    m_ConditionEvent: VelocityY
+    m_ConditionEvent: velocityY
     m_EventTreshold: -0.1
   - m_ConditionMode: 2
     m_ConditionEvent: isGrounded
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: isWallSliding
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2789663559025600751}
@@ -350,7 +356,7 @@ AnimatorStateTransition:
     m_ConditionEvent: isGrounded
     m_EventTreshold: 0
   - m_ConditionMode: 3
-    m_ConditionEvent: VelocityY
+    m_ConditionEvent: velocityY
     m_EventTreshold: 0.1
   - m_ConditionMode: 2
     m_ConditionEvent: isWallSliding
@@ -393,6 +399,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: c463b982ba1624b77b9606432cde5544, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &-3994629883053056249
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Player_Fall
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 00fea96572e017b49a1a1f13e23946a0, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -459,13 +491,13 @@ AnimatorController:
   m_Name: Player_AnimatorController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: VelocityX
+  - m_Name: velocityX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: VelocityY
+  - m_Name: velocityY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -692,7 +724,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 4
-    m_ConditionEvent: VelocityX
+    m_ConditionEvent: velocityX
     m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3285078712054758444}
@@ -766,7 +798,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 3
-    m_ConditionEvent: VelocityX
+    m_ConditionEvent: velocityX
     m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7006000742067974122}
