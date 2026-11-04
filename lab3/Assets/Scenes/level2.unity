@@ -351,6 +351,67 @@ PolygonCollider2D:
       - {x: 17.83714, y: 5.242712}
       - {x: -4.1060185, y: 5.0572615}
   m_UseDelaunayMesh: 1
+--- !u!1001 &362833429
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 47.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -8.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3292159586084411604, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3964990617220331468, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_Name
+      value: ChargerEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 8410559158758278514, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 71ec065aa5a684dfdae8738d0408b17b, type: 3}
 --- !u!1001 &420770949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2864,7 +2925,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &1825619292
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2921,6 +2982,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!4 &1825619293
 Transform:
   m_ObjectHideFlags: 0
@@ -2960,7 +3022,7 @@ GameObject:
   m_IsActive: 1
 --- !u!212 &1916149648
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3017,6 +3079,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!4 &1916149649
 Transform:
   m_ObjectHideFlags: 0
@@ -3347,3 +3410,4 @@ SceneRoots:
   - {fileID: 420770949}
   - {fileID: 306065175}
   - {fileID: 424741753}
+  - {fileID: 362833429}
