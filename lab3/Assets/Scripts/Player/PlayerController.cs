@@ -200,4 +200,29 @@ public class PlayerController : MonoBehaviour
     {
         currentVelocityX = 0f;
     }
+
+    // --- ДОДАНІ МЕТОДИ ДЛЯ КЕРУВАННЯ СТАНОМ ПРИ НОКБЕКУ / РЕСПАВНІ ---
+
+    /// <summary>
+    /// Примусово переводить гравця у повітряний стан (наприклад, після респавну)
+    /// </summary>
+    public void ForceAirState()
+    {
+        if (StateMachine != null && AirState != null)
+        {
+            StateMachine.ChangeState(AirState);
+        }
+    }
+
+    /// <summary>
+    /// Повністю зупиняє рух гравця (корисно при смерті або паузах)
+    /// </summary>
+    public void StopImmediately()
+    {
+        if (Rb != null)
+        {
+            Rb.linearVelocity = Vector2.zero;
+        }
+        ResetHorizontalSmoothing();
+    }
 }

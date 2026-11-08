@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float fallBoundaryY = -15f;
 
     private PlayerController player;
-    private Animator animator;
+    private PlayerAnimationRelay animationRelay; // Зв'язок з анімаціями
     private Rigidbody2D rb;
     private Collider2D col;
 
@@ -21,7 +21,7 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<PlayerController>();
-        animator = GetComponent<Animator>();
+        animationRelay = GetComponent<PlayerAnimationRelay>(); // Отримуємо релей
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         currentHealth = maxHealth;
@@ -46,6 +46,12 @@ public class PlayerHealth : MonoBehaviour
         else
         {
             ApplyKnockback(hitPosition);
+
+            // Викликаємо анімацію поранення через релей
+            if (animationRelay != null)
+            {
+                animationRelay.TriggerHurt();
+            }
         }
     }
 
@@ -69,9 +75,10 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator DeathAndRespawnRoutine(Vector2 spawnPosition)
     {
-        if (animator != null)
+        // Викликаємо анімацію смерті через релей замість прямого доступу до Animator
+        if (animationRelay != null)
         {
-            animator.SetTrigger("Death");
+            animationRelay.TriggerDeath();
         }
 
         if (rb == null) rb = GetComponent<Rigidbody2D>();
@@ -83,6 +90,7 @@ public class PlayerHealth : MonoBehaviour
         if (col == null) col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
+        // Затримка перед телепортацією (можеш налаштувати під довжину анімації смерті)
         yield return new WaitForSeconds(0.4f);
 
         transform.localScale = Vector3.one;
