@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D), typeof(PlayerInputReader))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement (N++ Momentum)")]
@@ -32,16 +32,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundRayLength = 0.35f;
     [SerializeField] private float wallRayLength = 0.25f;
 
-    [Header("Fall Death Boundary")]
-    [SerializeField] private float fallBoundaryY = -15f;
-
-    [Header("Animation & Visuals")]
-    [SerializeField] private Animator animator;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
     public Rigidbody2D Rb { get; private set; }
     public Collider2D Col { get; private set; }
+    public PlayerInputReader InputReader { get; private set; }
     public PlayerStateMachine StateMachine { get; private set; }
+
+    public float InputX => InputReader != null ? InputReader.InputX : 0f;
 
     public PlayerGroundedState GroundedState { get; private set; }
     public PlayerAirState AirState { get; private set; }
@@ -49,7 +45,6 @@ public class PlayerController : MonoBehaviour
     public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerDashState DashState { get; private set; }
 
-    public float InputX { get; private set; }
     public float FacingDirection { get; private set; } = 1f;
     public int LastWallDirection { get; private set; } = 0;
     public float CoyoteTimeCounter { get; private set; }
@@ -72,10 +67,8 @@ public class PlayerController : MonoBehaviour
     {
         Rb = GetComponent<Rigidbody2D>();
         Col = GetComponent<Collider2D>();
+        InputReader = GetComponent<PlayerInputReader>();
         InitialGravityScale = Rb.gravityScale;
-
-        if (animator == null) animator = GetComponent<Animator>();
-        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
 
         StateMachine = new PlayerStateMachine();
         GroundedState = new PlayerGroundedState(this, StateMachine);
@@ -92,19 +85,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y < fallBoundaryY)
-        {
-            GameObject sp = GameObject.Find("SpawnPoint");
-            Vector2 targetPos = sp != null ? (Vector2)sp.transform.position : Vector2.zero;
-            Respawn(targetPos);
-            return;
-        }
-
-        GatherInput();
+        UpdateFacingDirection();
         UpdateTimers();
 
-        HandleSpriteFlip();
-        UpdateAnimations();
+        if (InputReader.DashPressed && dashCooldownTimer <= 0f)
+        {
+            InputReader.ConsumeDash();
+            StateMachine.ChangeState(DashState);
+        }
 
         StateMachine.CurrentState.HandleInput();
         StateMachine.CurrentState.LogicUpdate();
@@ -115,19 +103,17 @@ public class PlayerController : MonoBehaviour
         StateMachine.CurrentState.PhysicsUpdate();
     }
 
-    private void GatherInput()
+    private void UpdateFacingDirection()
     {
-        InputX = Input.GetAxisRaw("Horizontal");
-        if (InputX != 0) FacingDirection = Mathf.Sign(InputX);
-
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Jump"))
+        if (InputReader.InputX != 0)
         {
-            JumpBufferCounter = jumpBufferTime;
+            FacingDirection = Mathf.Sign(InputReader.InputX);
         }
 
-        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && dashCooldownTimer <= 0f)
+        if (InputReader.JumpPressed)
         {
-            StateMachine.ChangeState(DashState);
+            JumpBufferCounter = jumpBufferTime;
+            InputReader.ConsumeJump();
         }
     }
 
@@ -136,36 +122,6 @@ public class PlayerController : MonoBehaviour
         CoyoteTimeCounter -= Time.deltaTime;
         JumpBufferCounter -= Time.deltaTime;
         dashCooldownTimer -= Time.deltaTime;
-    }
-
-    private void HandleSpriteFlip()
-    {
-        if (spriteRenderer == null) return;
-
-        if (InputX > 0.01f)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else if (InputX < -0.01f)
-        {
-            spriteRenderer.flipX = true;
-        }
-    }
-
-    private void UpdateAnimations()
-    {
-        if (animator == null) return;
-
-        // ��������� ��������� � ���� ����� ����� �� ������������ �������
-        animator.SetFloat("velocityX", Mathf.Abs(Rb.linearVelocity.x));
-        animator.SetFloat("velocityY", Rb.linearVelocity.y);
-        animator.SetBool("isGrounded", IsGrounded());
-
-        bool isWallSliding = StateMachine.CurrentState == WallSlideState;
-        bool isDashing = StateMachine.CurrentState == DashState;
-
-        animator.SetBool("isWallSliding", isWallSliding);
-        animator.SetBool("isDashing", isDashing);
     }
 
     public void ResetCoyoteTimer() => CoyoteTimeCounter = coyoteTime;
@@ -180,8 +136,8 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyHorizontalMovement(float accel, float decel)
     {
-        float targetSpeed = InputX * maxSpeed;
-        float smoothTime = IsGrounded() ? 0.15f : 0.22f; // ����������� �������� �������� ���� � ��������
+        float targetSpeed = InputReader.InputX * maxSpeed;
+        float smoothTime = IsGrounded() ? 0.15f : 0.22f;
         float newX = Mathf.SmoothDamp(Rb.linearVelocity.x, targetSpeed, ref currentVelocityX, smoothTime);
         Rb.linearVelocity = new Vector2(newX, Rb.linearVelocity.y);
     }
@@ -235,21 +191,6 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        if (Col == null) Col = GetComponent<Collider2D>();
-        if (Col == null) return;
-
-        Bounds b = Col.bounds;
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector2(b.min.x + 0.05f, b.min.y), new Vector2(b.min.x + 0.05f, b.min.y - groundRayLength));
-        Gizmos.DrawLine(new Vector2(b.max.x - 0.05f, b.min.y), new Vector2(b.max.x - 0.05f, b.min.y - groundRayLength));
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(b.center, b.center + Vector3.right * (b.extents.x + wallRayLength));
-        Gizmos.DrawLine(b.center, b.center + Vector3.left * (b.extents.x + wallRayLength));
-    }
-
     public void ConsumeJumpBuffer()
     {
         JumpBufferCounter = 0f;
@@ -260,34 +201,20 @@ public class PlayerController : MonoBehaviour
         currentVelocityX = 0f;
     }
 
-  public void Respawn(Vector2 spawnPosition)
+    public void ForceAirState()
     {
-        StartCoroutine(DeathAndRespawnRoutine(spawnPosition));
+        if (StateMachine != null && AirState != null)
+        {
+            StateMachine.ChangeState(AirState);
+        }
     }
 
-    private System.Collections.IEnumerator DeathAndRespawnRoutine(Vector2 spawnPosition)
+    public void StopImmediately()
     {
-        if (animator != null)
+        if (Rb != null)
         {
-            animator.SetTrigger("Death");
+            Rb.linearVelocity = Vector2.zero;
         }
-
-        Rb.linearVelocity = Vector2.zero;
-        currentVelocityX = 0f;
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
-
-        yield return new WaitForSeconds(0.4f);
-
-        transform.localScale = Vector3.one;
-
-        transform.position = spawnPosition;
-        Rb.linearVelocity = Vector2.zero;
-        currentVelocityX = 0f;
-        JumpBufferCounter = 0f;
-        CoyoteTimeCounter = 0f;
-
-        if (col != null) col.enabled = true;
-        StateMachine.ChangeState(AirState);
+        ResetHorizontalSmoothing();
     }
 }
