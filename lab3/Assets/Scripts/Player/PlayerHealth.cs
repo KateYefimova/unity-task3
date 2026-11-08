@@ -47,6 +47,7 @@ public class PlayerHealth : MonoBehaviour
         {
             ApplyKnockback(hitPosition);
 
+
             if (animationRelay != null)
             {
                 animationRelay.TriggerHurt();
@@ -74,6 +75,7 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator DeathAndRespawnRoutine(Vector2 spawnPosition)
     {
+
         if (animationRelay != null)
         {
             animationRelay.TriggerDeath();
