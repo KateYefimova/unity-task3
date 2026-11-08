@@ -2383,15 +2383,15 @@ PrefabInstance:
       objectReference: {fileID: -112567461, guid: 10f3cacccb0c4c547be76836eba20664, type: 3}
     - target: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.90534
       objectReference: {fileID: 0}
     - target: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.90534
       objectReference: {fileID: 0}
     - target: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.9245283
       objectReference: {fileID: 0}
     - target: {fileID: 1918864213774552662, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2455,6 +2455,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2475214590978535480, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1648910502}
+    - targetCorrespondingSourceObject: {fileID: 2475214590978535480, guid: 09bef158380bfe14088537f1326148e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1648910505}
   m_SourcePrefab: {fileID: 100100000, guid: 09bef158380bfe14088537f1326148e6, type: 3}
 --- !u!1 &1648910501 stripped
 GameObject:
@@ -2497,6 +2500,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 3
   fallBoundaryY: -15
+--- !u!212 &1648910504 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
+  m_PrefabInstance: {fileID: 1648910500}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1648910505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648910501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0be4f9caa8f4134dbf4eaf452d2a348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationRelay
+  animator: {fileID: 1648910502}
+  spriteRenderer: {fileID: 1648910504}
 --- !u!1001 &1667608953
 PrefabInstance:
   m_ObjectHideFlags: 0

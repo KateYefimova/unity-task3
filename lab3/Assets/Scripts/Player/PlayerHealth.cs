@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float fallBoundaryY = -15f;
 
     private PlayerController player;
-    private Animator animator;
+    private PlayerAnimationRelay animationRelay; 
     private Rigidbody2D rb;
     private Collider2D col;
 
@@ -21,7 +21,7 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         player = GetComponent<PlayerController>();
-        animator = GetComponent<Animator>();
+        animationRelay = GetComponent<PlayerAnimationRelay>(); 
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         currentHealth = maxHealth;
@@ -46,6 +46,11 @@ public class PlayerHealth : MonoBehaviour
         else
         {
             ApplyKnockback(hitPosition);
+
+            if (animationRelay != null)
+            {
+                animationRelay.TriggerHurt();
+            }
         }
     }
 
@@ -69,9 +74,9 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator DeathAndRespawnRoutine(Vector2 spawnPosition)
     {
-        if (animator != null)
+        if (animationRelay != null)
         {
-            animator.SetTrigger("Death");
+            animationRelay.TriggerDeath();
         }
 
         if (rb == null) rb = GetComponent<Rigidbody2D>();

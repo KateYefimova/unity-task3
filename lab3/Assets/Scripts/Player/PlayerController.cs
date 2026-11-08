@@ -200,4 +200,22 @@ public class PlayerController : MonoBehaviour
     {
         currentVelocityX = 0f;
     }
+
+    public void ForceAirState()
+    {
+        if (StateMachine != null && AirState != null)
+        {
+            StateMachine.ChangeState(AirState);
+        }
+    }
+
+ 
+    public void StopImmediately()
+    {
+        if (Rb != null)
+        {
+            Rb.linearVelocity = Vector2.zero;
+        }
+        ResetHorizontalSmoothing();
+    }
 }
