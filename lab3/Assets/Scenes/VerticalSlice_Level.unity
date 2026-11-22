@@ -1457,6 +1457,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 39803417700511022, guid: 09bef158380bfe14088537f1326148e6, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.8125
+      objectReference: {fileID: 0}
     - target: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -1530,11 +1534,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2475214590978535480, guid: 09bef158380bfe14088537f1326148e6, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 1648910504}
+    - targetCorrespondingSourceObject: {fileID: 2475214590978535480, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1648910502}
     - targetCorrespondingSourceObject: {fileID: 2475214590978535480, guid: 09bef158380bfe14088537f1326148e6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1648910503}
+      addedObject: {fileID: 1648910510}
   m_SourcePrefab: {fileID: 100100000, guid: 09bef158380bfe14088537f1326148e6, type: 3}
 --- !u!1 &1648910501 stripped
 GameObject:
@@ -1563,7 +1570,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1648910503
+--- !u!114 &1648910504
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1572,13 +1579,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1648910501}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fc8b5ecc7d184721a59c1573410088b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3dcd43f4e2992194a9ecb06bea1e011d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationFeedbackHandler
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 3
+  fallBoundaryY: -15
+--- !u!212 &1648910508 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1576143690412742310, guid: 09bef158380bfe14088537f1326148e6, type: 3}
+  m_PrefabInstance: {fileID: 1648910500}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1648910510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648910501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0be4f9caa8f4134dbf4eaf452d2a348, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationRelay
   animator: {fileID: 1648910502}
-  hurtKey: 104
-  deathKey: 107
-  actionKey: 101
+  spriteRenderer: {fileID: 1648910508}
 --- !u!1001 &1667608953
 PrefabInstance:
   m_ObjectHideFlags: 0

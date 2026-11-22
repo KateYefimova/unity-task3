@@ -73,17 +73,17 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void HandlePlayerHit(GameObject target)
     {
-        PlayerController pc = target.GetComponent<PlayerController>();
-        if (!target.CompareTag("Player") && pc == null) return;
+        PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
 
-        Vector2 targetPos = spawnPoint != null ? (Vector2)spawnPoint.position : Vector2.zero;
+        if (!target.CompareTag("Player") && playerHealth == null) return;
 
-        if (pc != null)
+        if (playerHealth != null)
         {
-            pc.Respawn(targetPos);
+            playerHealth.RespawnAtCheckpoint();
         }
         else
         {
+            Vector2 targetPos = spawnPoint != null ? (Vector2)spawnPoint.position : Vector2.zero;
             target.transform.position = targetPos;
             Rigidbody2D prb = target.GetComponent<Rigidbody2D>();
             if (prb != null)

@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class RespawnOnTouch : MonoBehaviour
 {
-    [SerializeField] private Transform spawnPoint;
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         TryRespawn(collision.gameObject);
@@ -16,23 +14,11 @@ public class RespawnOnTouch : MonoBehaviour
 
     private void TryRespawn(GameObject target)
     {
-        PlayerController player = target.GetComponent<PlayerController>();
+        PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
 
-        if (player != null)
+        if (playerHealth != null)
         {
-            if (spawnPoint != null)
-            {
-                target.transform.position = spawnPoint.position;
-            }
-            else
-            {
-                target.transform.position = Vector3.zero;
-            }
-
-            if (player.Rb != null)
-            {
-                player.Rb.linearVelocity = Vector2.zero;
-            }
+            playerHealth.RespawnAtCheckpoint();
         }
     }
 }
