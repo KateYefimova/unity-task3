@@ -9,9 +9,15 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected float detectionRadius = 5f;
     [SerializeField] protected Transform spawnPoint;
 
+    [Tooltip("Damage dealt to the player on contact. 3 = full player health, i.e. instant respawn (old behaviour).")]
+    [SerializeField] protected int contactDamage = 3;
+
     protected Rigidbody2D rb;
     protected Collider2D col;
     protected Transform playerTransform;
+
+    /// <summary>False while the enemy is "dead" (Death animation / waiting for revive).</summary>
+    public bool IsLogicActive { get; private set; } = true;
 
     public bool PlayerInRange()
     {
@@ -33,6 +39,8 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (!IsLogicActive) return;
+
         if (playerTransform == null)
         {
             FindPlayer();
@@ -43,12 +51,30 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (!IsLogicActive) return;
         FixedBehaviour();
     }
 
     protected abstract void UpdateBehaviour();
 
     protected virtual void FixedBehaviour() { }
+
+    /// <summary>
+    /// Turns enemy gameplay on/off without destroying the object (used by EnemyReactions for Death/revive).
+    /// </summary>
+    public void SetLogicActive(bool active)
+    {
+        if (IsLogicActive == active) return;
+        IsLogicActive = active;
+
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+        if (col != null) col.enabled = active;
+
+        if (active) ResetBehaviour();
+    }
+
+    /// <summary>Called when the enemy is revived: return the behaviour to its initial state.</summary>
+    protected virtual void ResetBehaviour() { }
 
     protected virtual void FindPlayer()
     {
@@ -73,23 +99,23 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void HandlePlayerHit(GameObject target)
     {
-        PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
+        PlayerHitHandler hitHandler = target.GetComponent<PlayerHitHandler>();
 
-        if (!target.CompareTag("Player") && playerHealth == null) return;
-
-        if (playerHealth != null)
+        if (hitHandler != null)
         {
-            playerHealth.RespawnAtCheckpoint();
+            hitHandler.ReceiveHit(contactDamage, transform.position);
+            return;
         }
-        else
+
+        if (!target.CompareTag("Player")) return;
+
+        // Fallback for a player without the health components: just teleport to spawn.
+        Vector2 targetPos = spawnPoint != null ? (Vector2)spawnPoint.position : Vector2.zero;
+        target.transform.position = targetPos;
+        Rigidbody2D prb = target.GetComponent<Rigidbody2D>();
+        if (prb != null)
         {
-            Vector2 targetPos = spawnPoint != null ? (Vector2)spawnPoint.position : Vector2.zero;
-            target.transform.position = targetPos;
-            Rigidbody2D prb = target.GetComponent<Rigidbody2D>();
-            if (prb != null)
-            {
-                prb.linearVelocity = Vector2.zero;
-            }
+            prb.linearVelocity = Vector2.zero;
         }
     }
 

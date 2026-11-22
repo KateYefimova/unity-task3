@@ -1,110 +1,49 @@
-using System.Collections;
+using System;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerController))]
+/// <summary>
+/// Only stores the player's health. Does not move the player, play animations or respawn:
+/// other components react to the Damaged / Died events.
+///   PlayerHitHandler - contacts with enemies/hazards, knockback, Hurt animation
+///   PlayerRespawn    - Death animation, fall boundary, teleport to the spawn point
+/// </summary>
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health Settings")]
     [SerializeField] private int maxHealth = 3;
-    private int currentHealth;
 
-    [Header("Fall Death Boundary")]
-    [SerializeField] private float fallBoundaryY = -15f;
+    public int MaxHealth => maxHealth;
+    public int CurrentHealth { get; private set; }
+    public bool IsDead => CurrentHealth <= 0;
 
-    private PlayerController player;
-    private PlayerAnimationRelay animationRelay; 
-    private Rigidbody2D rb;
-    private Collider2D col;
-
-    public int CurrentHealth => currentHealth;
+    /// <summary>Health went down but the player is still alive. Argument: health left.</summary>
+    public event Action<int> Damaged;
+    public event Action Died;
 
     private void Awake()
     {
-        player = GetComponent<PlayerController>();
-        animationRelay = GetComponent<PlayerAnimationRelay>(); 
-        rb = GetComponent<Rigidbody2D>();
-        col = GetComponent<Collider2D>();
-        currentHealth = maxHealth;
+        CurrentHealth = maxHealth;
     }
 
-    private void Update()
+    public void TakeDamage(int amount)
     {
-        if (transform.position.y < fallBoundaryY)
-        {
-            RespawnAtCheckpoint();
-        }
+        if (IsDead || amount <= 0) return;
+
+        CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
+
+        if (IsDead) Died?.Invoke();
+        else Damaged?.Invoke(CurrentHealth);
     }
 
-    public void TakeDamage(int damageAmount, Vector2 hitPosition)
+    public void Kill()
     {
-        currentHealth -= damageAmount;
+        if (IsDead) return;
 
-        if (currentHealth <= 0)
-        {
-            RespawnAtCheckpoint();
-        }
-        else
-        {
-            ApplyKnockback(hitPosition);
-
-
-            if (animationRelay != null)
-            {
-                animationRelay.TriggerHurt();
-            }
-        }
+        CurrentHealth = 0;
+        Died?.Invoke();
     }
 
-    private void ApplyKnockback(Vector2 hitPosition)
+    public void ResetHealth()
     {
-        if (rb == null) return;
-
-        float direction = transform.position.x > hitPosition.x ? 1f : -1f;
-        Vector2 knockbackForce = new Vector2(direction * 7f, 8f);
-
-        rb.linearVelocity = knockbackForce;
-    }
-
-    public void RespawnAtCheckpoint()
-    {
-        currentHealth = maxHealth;
-        GameObject sp = GameObject.Find("SpawnPoint");
-        Vector2 targetPos = sp != null ? (Vector2)sp.transform.position : Vector2.zero;
-        StartCoroutine(DeathAndRespawnRoutine(targetPos));
-    }
-
-    private IEnumerator DeathAndRespawnRoutine(Vector2 spawnPosition)
-    {
-
-        if (animationRelay != null)
-        {
-            animationRelay.TriggerDeath();
-        }
-
-        if (rb == null) rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-        }
-
-        if (col == null) col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
-
-        yield return new WaitForSeconds(0.4f);
-
-        transform.localScale = Vector3.one;
-        transform.position = spawnPosition;
-
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-        }
-
-        if (col != null) col.enabled = true;
-
-        if (player.StateMachine != null && player.AirState != null)
-        {
-            player.StateMachine.ChangeState(player.AirState);
-        }
+        CurrentHealth = maxHealth;
     }
 }

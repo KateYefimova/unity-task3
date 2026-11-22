@@ -1,24 +1,25 @@
 using UnityEngine;
 
+/// <summary>Hazard (spikes, pit): touching it is always lethal for the player.</summary>
 public class RespawnOnTouch : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        TryRespawn(collision.gameObject);
+        TryKill(collision.gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        TryRespawn(collision.gameObject);
+        TryKill(collision.gameObject);
     }
 
-    private void TryRespawn(GameObject target)
+    private void TryKill(GameObject target)
     {
-        PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
+        PlayerHitHandler hitHandler = target.GetComponent<PlayerHitHandler>();
 
-        if (playerHealth != null)
+        if (hitHandler != null)
         {
-            playerHealth.RespawnAtCheckpoint();
+            hitHandler.ReceiveLethalHit();
         }
     }
 }

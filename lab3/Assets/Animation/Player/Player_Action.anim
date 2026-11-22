@@ -443,9 +443,16 @@ AnimationClip:
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.5
-    functionName: OnInteractionEvent
-    data: Player_PrimaryAction
+  - time: 0.25
+    functionName: OnInteractionImpact
+    data: Use
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.48333332
+    functionName: OnInteractionFinished
+    data: Use
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
