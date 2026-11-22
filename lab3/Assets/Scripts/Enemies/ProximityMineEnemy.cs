@@ -117,6 +117,16 @@ public class ProximityMineEnemy : BaseEnemy
         if (spriteRenderer != null) spriteRenderer.color = idleColor;
     }
 
+    protected override void ResetBehaviour()
+    {
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        currentState = MineState.Idle;
+        timer = 0f;
+        UpdateAnimatorState(0);
+        if (spriteRenderer != null) spriteRenderer.color = idleColor;
+    }
+
     private void UpdateAnimatorState(int stateIndex)
     {
         if (mineAnimator != null)

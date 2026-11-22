@@ -2,37 +2,23 @@ using UnityEngine;
 
 public class RespawnOnTouch : MonoBehaviour
 {
-    [SerializeField] private Transform spawnPoint;
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        TryRespawn(collision.gameObject);
+        TryKill(collision.gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        TryRespawn(collision.gameObject);
+        TryKill(collision.gameObject);
     }
 
-    private void TryRespawn(GameObject target)
+    private void TryKill(GameObject target)
     {
-        PlayerController player = target.GetComponent<PlayerController>();
+        PlayerHitHandler hitHandler = target.GetComponent<PlayerHitHandler>();
 
-        if (player != null)
+        if (hitHandler != null)
         {
-            if (spawnPoint != null)
-            {
-                target.transform.position = spawnPoint.position;
-            }
-            else
-            {
-                target.transform.position = Vector3.zero;
-            }
-
-            if (player.Rb != null)
-            {
-                player.Rb.linearVelocity = Vector2.zero;
-            }
+            hitHandler.ReceiveLethalHit();
         }
     }
 }

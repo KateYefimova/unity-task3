@@ -9,9 +9,14 @@ public abstract class BaseEnemy : MonoBehaviour
     [SerializeField] protected float detectionRadius = 5f;
     [SerializeField] protected Transform spawnPoint;
 
+    [Tooltip("3 = full player health (instant respawn)")]
+    [SerializeField] protected int contactDamage = 3;
+
     protected Rigidbody2D rb;
     protected Collider2D col;
     protected Transform playerTransform;
+
+    public bool IsLogicActive { get; private set; } = true;
 
     public bool PlayerInRange()
     {
@@ -33,6 +38,8 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (!IsLogicActive) return;
+
         if (playerTransform == null)
         {
             FindPlayer();
@@ -43,12 +50,26 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (!IsLogicActive) return;
         FixedBehaviour();
     }
 
     protected abstract void UpdateBehaviour();
 
     protected virtual void FixedBehaviour() { }
+
+    public void SetLogicActive(bool active)
+    {
+        if (IsLogicActive == active) return;
+        IsLogicActive = active;
+
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+        if (col != null) col.enabled = active;
+
+        if (active) ResetBehaviour();
+    }
+
+    protected virtual void ResetBehaviour() { }
 
     protected virtual void FindPlayer()
     {
@@ -73,23 +94,22 @@ public abstract class BaseEnemy : MonoBehaviour
 
     protected virtual void HandlePlayerHit(GameObject target)
     {
-        PlayerController pc = target.GetComponent<PlayerController>();
-        if (!target.CompareTag("Player") && pc == null) return;
+        PlayerHitHandler hitHandler = target.GetComponent<PlayerHitHandler>();
+
+        if (hitHandler != null)
+        {
+            hitHandler.ReceiveHit(contactDamage, transform.position);
+            return;
+        }
+
+        if (!target.CompareTag("Player")) return;
 
         Vector2 targetPos = spawnPoint != null ? (Vector2)spawnPoint.position : Vector2.zero;
-
-        if (pc != null)
+        target.transform.position = targetPos;
+        Rigidbody2D prb = target.GetComponent<Rigidbody2D>();
+        if (prb != null)
         {
-            pc.Respawn(targetPos);
-        }
-        else
-        {
-            target.transform.position = targetPos;
-            Rigidbody2D prb = target.GetComponent<Rigidbody2D>();
-            if (prb != null)
-            {
-                prb.linearVelocity = Vector2.zero;
-            }
+            prb.linearVelocity = Vector2.zero;
         }
     }
 

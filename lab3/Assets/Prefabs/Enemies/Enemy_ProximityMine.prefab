@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5372338426827378456}
   - component: {fileID: 8753867354081089517}
   - component: {fileID: 5829321219264247657}
+  - component: {fileID: 4185730092615437321}
   m_Layer: 0
   m_Name: Enemy_ProximityMine
   m_TagString: Untagged
@@ -201,3 +202,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4185730092615437321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7350787330235332229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18362124a11a488784a24566d15c2762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyReactions
+  animator: {fileID: 5829321219264247657}
+  spriteRenderer: {fileID: 5928803497161570765}
+  hurtKey: 106
+  deathKey: 108
+  testTriggerRadius: 8
+  reviveAfterDeath: 1
+  reviveDelay: 1.5
+  deathEventTimeout: 1.5
