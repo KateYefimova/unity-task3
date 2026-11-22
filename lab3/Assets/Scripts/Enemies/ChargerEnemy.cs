@@ -13,7 +13,7 @@ public class ChargerEnemy : BaseEnemy
 
         if (behaviour == null)
         {
-            Debug.LogError($"[ChargerEnemy] {name} has no IEnemyBehaviour component (e.g. ChargeBehaviour).", this);
+            Debug.LogError($"[ChargerEnemy] {name}: no IEnemyBehaviour on this object", this);
         }
     }
 
