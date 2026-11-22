@@ -1,9 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Charge behaviour: windup -> dash towards the player -> return to the start point -> cooldown -> ready again.
-/// Every lifecycle step writes a [EnemyBehaviour] log so it can be followed in the Console while playing.
-/// </summary>
 public class ChargeBehaviour : MonoBehaviour, IEnemyBehaviour
 {
     [Header("Charge Settings")]
@@ -81,7 +77,7 @@ public class ChargeBehaviour : MonoBehaviour, IEnemyBehaviour
 
             case Phase.Returning:
                 Vector2 toStart = initialPosition - rb.position;
-                // Timeout protects from getting stuck forever if a wall blocks the way back.
+                // timeout: a wall can block the way back
                 if (toStart.sqrMagnitude > 0.05f && phaseTimer > 0f)
                 {
                     rb.linearVelocity = toStart.normalized * returnSpeed;

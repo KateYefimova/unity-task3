@@ -1,10 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Enemy that only decides WHEN to run its behaviour. WHAT it does lives in an
-/// IEnemyBehaviour component (ChargeBehaviour on the prefab), so the behaviour
-/// can be swapped for another one without touching this class.
-/// </summary>
 public class ChargerEnemy : BaseEnemy
 {
     private IEnemyBehaviour behaviour;
@@ -26,7 +21,6 @@ public class ChargerEnemy : BaseEnemy
     {
         if (behaviour == null) return;
 
-        // The player can appear later than Start (respawn, scene load order), so initialize lazily.
         if (!behaviourInitialized)
         {
             if (playerTransform == null) return;

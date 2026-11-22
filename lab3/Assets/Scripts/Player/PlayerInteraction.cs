@@ -1,13 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Interaction ("Use") scenario of the player. No real action this week, only a Debug.Log:
-///   E pressed          -> START, Animator trigger "Action" (Player_Action state)
-///   Animation Event    -> OnInteractionImpact at 0.25s: the moment the action "happens" (one log)
-///   Animation Event    -> OnInteractionFinished at the end of the clip: interaction can be started again
-/// If the Action state is interrupted (jump, death...) the end event never comes,
-/// so a safety timeout unlocks the interaction instead of leaving it stuck.
-/// </summary>
 [RequireComponent(typeof(PlayerAnimationRelay))]
 public class PlayerInteraction : MonoBehaviour
 {
@@ -51,7 +43,7 @@ public class PlayerInteraction : MonoBehaviour
         Debug.Log($"[Interaction] START: '{interactionName}'");
     }
 
-    // Animation Event on Player_Action.anim (t = 0.25s).
+    // Animation Event (Player_Action, 0.25s)
     public void OnInteractionImpact()
     {
         if (!inProgress || impactFired) return;
@@ -60,7 +52,7 @@ public class PlayerInteraction : MonoBehaviour
         Debug.Log($"[Interaction] EVENT: player performed '{interactionName}' at {Time.time:F2}s");
     }
 
-    // Animation Event on Player_Action.anim (end of the clip).
+    // Animation Event (Player_Action, end)
     public void OnInteractionFinished()
     {
         if (!inProgress) return;

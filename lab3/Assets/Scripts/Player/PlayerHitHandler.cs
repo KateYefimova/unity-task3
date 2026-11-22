@@ -1,10 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Entry point for everything that hits the player (enemy contact, hazards).
-/// Turns a hit into damage, and if the player survives: knockback + Hurt animation.
-/// Short invulnerability prevents one contact from hitting several times in a row.
-/// </summary>
 [RequireComponent(typeof(PlayerHealth), typeof(Rigidbody2D))]
 public class PlayerHitHandler : MonoBehaviour
 {
@@ -23,7 +18,6 @@ public class PlayerHitHandler : MonoBehaviour
         animationRelay = GetComponent<PlayerAnimationRelay>();
     }
 
-    /// <summary>Enemy contact: damage from a point in the world (used for the knockback direction).</summary>
     public void ReceiveHit(int damage, Vector2 sourcePosition)
     {
         if (health.IsDead || Time.time < invulnerableUntil) return;
@@ -37,7 +31,6 @@ public class PlayerHitHandler : MonoBehaviour
         if (animationRelay != null) animationRelay.TriggerHurt();
     }
 
-    /// <summary>Hazards such as spikes or pits: always lethal, no knockback.</summary>
     public void ReceiveLethalHit()
     {
         health.Kill();

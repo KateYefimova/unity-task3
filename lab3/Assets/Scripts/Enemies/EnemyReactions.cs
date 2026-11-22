@@ -1,12 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Hurt / Death reactions for an enemy, driven by the Animator (no health/combat system this week).
-/// Hurt:  trigger "Hurt"  -> Hurt clip -> Animation Event OnHurtAnimationFinished -> back to idle.
-/// Death: enemy logic and collider are switched off -> trigger "Death" -> Death clip ->
-///        Animation Event OnDeathAnimationFinished -> sprite hidden -> optional revive after a delay.
-/// The test keys only affect enemies near the player, so one key press does not kill every enemy in the level.
-/// </summary>
 [RequireComponent(typeof(BaseEnemy))]
 public class EnemyReactions : MonoBehaviour
 {
@@ -22,7 +15,6 @@ public class EnemyReactions : MonoBehaviour
     [Header("Death")]
     [SerializeField] private bool reviveAfterDeath = true;
     [SerializeField] private float reviveDelay = 1.5f;
-    [Tooltip("If the Death Animation Event never arrives (clip/transition changed), finish death after this time.")]
     [SerializeField] private float deathEventTimeout = 1.5f;
 
     private static readonly int HurtTrigger = Animator.StringToHash("Hurt");
@@ -78,13 +70,13 @@ public class EnemyReactions : MonoBehaviour
         Invoke(nameof(DeathEventTimeout), deathEventTimeout);
     }
 
-    // Animation Event at the end of the Hurt clip.
+    // Animation Event (Anim_Mine_Hurt)
     public void OnHurtAnimationFinished()
     {
         Debug.Log($"[EnemyReaction] HURT finished: {name}");
     }
 
-    // Animation Event at the end of the Death clip.
+    // Animation Event (Anim_Mine_Death)
     public void OnDeathAnimationFinished()
     {
         if (!isDead || deathFinished) return;
@@ -105,7 +97,7 @@ public class EnemyReactions : MonoBehaviour
 
     private void Revive()
     {
-        // Restore scale before Rebind, otherwise the Animator would take the "shrunk" scale as default.
+        // scale must be restored before Rebind, otherwise Animator saves scale 0 as default
         transform.localScale = initialScale;
         if (spriteRenderer != null) spriteRenderer.enabled = true;
 

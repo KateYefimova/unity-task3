@@ -1,10 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Handles what happens after the player dies: Death animation, short pause,
-/// teleport to the spawn point, health reset. Also kills the player below the fall boundary.
-/// </summary>
 [RequireComponent(typeof(PlayerHealth), typeof(PlayerController))]
 public class PlayerRespawn : MonoBehaviour
 {
